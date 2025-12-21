@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(res => {
             if(res.success){
-                localStorage.setItem("username", res.username);
+                sessionStorage.setItem("username", res.username);
+                sessionStorage.setItem("ID", data.user);
                 window.location.href = res.redirect;
             }else{
                 alert(res.message);

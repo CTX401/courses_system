@@ -1,41 +1,50 @@
+    const addStdBtn = document.getElementById("addStudent").querySelector("button");
 
-        table.addEventListener("contextmenu", function(f){
-            f.preventDefault();
-            
-            const td = f.target.closest("td");
-            if (!td) return;
+    addStdBtn.addEventListener("click", (addUser)=>{
+        addUser.preventDefault();
+        addingS = true;
+        const tableBody = document.getElementById("stdTabBody");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td align="center"></td>
+            <td><input type="text" style="width: 100%;"></td>
+            <td><input type="text" style="width: 100%;"></td>
+            <td align="center"><input type="text" style="width: 100%;"></td>
+            <td><input type="text" style="width: 100%;"></td>
+            <td><input type="text" style="width: 100%;"></td>
+            <td><input type="text" style="width: 100%;"></td>
+            <td><input type="text" style="width: 100%;"></td>
+            <td><input type="text" style="width: 100%;"></td>
+            <td align="center"><button class='submitAdd'> ✔ </button></td>`;
+        tableBody.append(newRow);
 
-            const oldValue = td.innerText;
-            const input = document.createElement("input");
-            input.type = "text";
-            input.value = oldValue;
-            input.style.width = td.offsetWidth;
+        tableStd.querySelector(".submitAdd").addEventListener("click", async (subAdd)=>{
+            const tr = subAdd.target.closest("tr");
+            const newRowValues = Array.from(tr.querySelectorAll("input")).map(td => td.value);
+            let allPass = true;
 
-            td.innerText = "";
-            td.appendChild(input);
-            input.focus();
-
-            function save(){
-                td.innerText = input.value;
-                edited = true;
-                input.removeEventListener("blur", save);
-                input.removeEventListener("keydown", onKeyDown);
-            }
-
-            function onKeyDown(event) {
-                if(event.key === "Enter"){
-                    save();
-                }else if(event.key === "Escape"){
-                    td.innerText = oldValue;
+            for(let i=0; i<newRowValues.length; i++){
+                if(newRowValues[i] == ""){
+                    if(i == 6){
+                        newRowValues[i] = "-";
+                        continue;
+                    }
+                    allPass = false;
+                    alert("connot null");
+                    break;
                 }
             }
 
-            input.addEventListener("blur", save);
-            input.addEventListener("keydown", onKeyDown);
-        });
-
-                     const res = await fetch("/api/dltUser", {
-                        method: "POST",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({id: userId})  // 建议传对象
-                    });
+            const addSql = `INSERT INTO student_info (name, id, gender, academy, class, phone_number, email, degree) VALUES ('${newRowValues[0]}', '${newRowValues[1]}', '${newRowValues[2]}', '${newRowValues[3]}', '${newRowValues[4]}', '${newRowValues[5]}', '${newRowValues[6]}', '${newRowValues[7]}')`;            
+            const res = await fetch("/api/addUser/std", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({sql: addSql})
+            });
+            const result = await res.json();
+            alert(result.message);
+            if(result.success){
+                location.reload();
+            }
+        });        
+    });
