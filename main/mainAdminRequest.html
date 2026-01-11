@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html id="html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <link href="style/mainAdminRequest.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="scripts/mainAdminRequest.js"></script>
+</head>
+<body>
+    <div id="head">
+        <div class="bg"></div>
+        <ul id="headCont">
+            <li class="Title">
+                <img src="images/graduation.png">
+                <h1>校园选课系统</h1>
+            </li>
+            <li class="navBar">
+                <div><a href="mainAdmin.html" class="users">用户查询</a></div>
+                <div><a href="mainAdminCourse.html" class="courses">课程管理</a></div>
+                <div><a href="mainAdminRequest.html" class="requests">请求查询</a></div>
+            </li>
+            <li class="userInfo">
+                <img src="images/user.png">
+                <div id="userName"></div>
+            </li>
+        </ul>
+    </div>
+    <div id="content">
+        <div class="searchBar">
+            <input type="text" id="search" placeholder="查询">
+            <select id="dropMenu">
+                <option>全部</option>
+                <!-- 由javascript动态添加 -->
+            </select>
+        </div>
+        <table class="requestInfo" cellspacing="0">
+            <thead>
+                <tr>
+                    <th style="width: 55px">序号</th>
+                    <th style="width: 72px">教师</th>
+                    <th style="width: 90px">ID</th>
+                    <th style="width: 88px">类型</th>
+                    <th style="width: 205px">日期</th>
+                    <th  style="width: 32px"></th>
+                </tr>
+            </thead>
+            <tbody id="requestBody">
+                <!-- JS动态填充 -->
+            </tbody>
+            <tfoot id="tfoot">
+                <tr>
+                    <td colspan="10" style="text-align:center">
+                        <span id="start"> << </span>
+                        <span id="backward"> < </span>
+                        <span id="pageNum"></span>
+                        <span id="forward"> > </span>
+                        <span id="end"> >> </span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div id="checkReqPop">
+            <div class="checkPop" id="checkPop">
+                <button class="closeCheckPop" id="closeCheckPop"> x </button>
+                <h3 style="text-align:center;"></h3> <hr>
+                <div id="reqInfo">
+                <!-- <span>课程名称：</span>
+                <span>课程编号：</span>
+                <span>授课教师：</span>
+                <span>删除原因：</span> -->
+                </div>
+                <div id="decision">
+                    <button class="approved">同意</button>
+                    <button class="reject">驳回</button>
+                    <button class="checking" id="checking">检查</button>
+                </div>
+            </div>
+        </div>
+        <div id="rejectPop">
+            <div class="rejReason" id="rejReason">
+                <button class="closeRejReason"> x </button>
+                <h3 style="text-align:center">驳回原因</h3> <hr>
+                原因：
+                <select id="rejOption">
+                    <option selected hidden disabled> - </option>
+                    <option>教室容量不足</option>
+                    <option>安排冲突</option>
+                    <option>课程已存在</option>
+                    <option>其他原因</option>
+                </select><br>
+                <input id="reasonInput" placeholder="请输入原因">
+                <div class="subRej"><button class="rejBtn"> 确定 </button></div>
+            </div>
+        </div>
+        <div id="validating">
+            <div class="validatePop">
+               <div class="condition">
+                    <ul>
+                        <li id="conflict-check">冲突检测： <span class="1"></span><span class='2'></span><span class="3"></span></li>
+                        <li id="capacity-check">容量检测： <span class="1"></span><span class='2'></span><span class="3"></span></li>
+                        <li id="duplicate-check">课程重复检测： <span class="1"></span><span class='2'></span><span class="3"></span></li>
+                    </ul>
+               </div> 
+               <div id="closeVAL"><button> 关闭 </button></div>
+            </div>
+        </div>
+    </div>
+    <div id="foot"></div>
+</body>
+</html>

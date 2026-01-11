@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登陆页面</title>
+    <link href="style/login_style.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="scripts/login_script.js"></script>
+    <script type="text/javascript" src="scripts/login_db.js"></script>
+</head>
+<body>
+    <form class="window" id="loginForm">
+        <h3>登录</h3><hr>        
+        <div class="user-item">
+            <img src="images/user.png" class="user-icon">
+            <input type="text" name="user" id="username" placeholder="请输入工号/学号" required>
+        </div>
+
+        <div class="password-item">
+            <img src="images/lock.png" class="password-icon">
+            <input type="password" name="password" id="password_input" placeholder="密码" required> 
+        </div>
+
+        <div class="showPassword"><input type="checkbox" onclick="showPassword()"><p>显示密码</p></div>
+
+        <input type="submit" value="登录" id="submit" onclick=""> <br>
+
+        <div class="footer">
+            没有账号？<a href="accActivate.html" class="activateAcc">账号激活</a>
+            <a href="" class="forgetPass">忘记密码？</a>
+        </div>
+    </form>
+</body>
+</html>

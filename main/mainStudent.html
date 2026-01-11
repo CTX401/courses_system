@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html id="html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <link href="style/mainStudent.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="scripts/mainStudent.js"></script>
+</head>
+<body>
+    <div id="head">
+        <div class="bg"></div>
+        <ul id="headCont">
+            <li class="Title">
+                <img src="images/graduation.png">
+                <h1>校园选课系统</h1>
+            </li>
+            <li class="navBar">
+                <div><a href="mainStudent.html" class="courseSelect">选课系统</a></div>
+                <div><a href="mainStdTable.html" class="classTable">课表查询</a></div>
+            </li>
+            <li class="userInfo">
+                <img src="images/user.png">
+                <div id="userName"></div>
+            </li>
+        </ul>
+    </div>
+    <div id="content">
+        <div class="searchBar">
+            <input type="text" id="search" placeholder="输入课程/教师...">
+            <select id="dropMenu">
+                <option>全部</option>
+                <!-- 由javascript动态添加 -->
+            </select>
+        </div>
+        <div class="tableContainer">
+            <table class="courses" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="width: 54px;">序号</th>
+                        <th style="width: 135px;">课程</th>
+                        <th style="width: 214px;">学院</th>
+                        <th style="width: 226px;">时间</th>
+                        <th style="width: 90px;">授课教师</th>
+                        <th style="width: 54px;">学分</th>
+                        <th style="width: 202px;">教室</th>
+                        <th style="width: 117px;">课堂人数</th>                    
+                        <th style="width: 37px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="courseBody">
+                    <!-- JS动态填充 -->
+                </tbody>
+                <tfoot id="tfoot">
+                    <tr>
+                        <td colspan="10" style="text-align:center">
+                            <span id="start"> << </span>
+                            <span id="backward"> < </span>
+                            <span id="pageNum"></span>
+                            <span id="forward"> > </span>
+                            <span id="end"> >> </span>
+                        </td>
+                    </tr>                
+                </tfoot>
+            </table>
+        </div>        
+        <div id="CTpopUp">
+            <div class="chooseTeacher", id="chooseTeacher">
+                <h2> 选择授课老师 </h2>
+                <hr>
+                <table id="cTtab" cellspacing="0" style="margin:10px auto;">
+                    <thead>
+                        <tr>
+                            <th>课程</th>
+                            <th>学院</th>
+                            <th>时间</th>
+                            <th>授课教师</th>
+                            <th>学分</th>
+                            <th>教室</th>     
+                            <th>人数</th>
+                            <th></th>       
+                        </tr>
+                    </thead>
+                    <tbody id="cTtabBody">
+                        <!-- js动态填充 -->
+                    </tbody>
+                    <tfoot style="text-align: center;">
+                        <tr>
+                            <td colspan="8">
+                                <button id="confirmTeacher"> 确定 </button>
+                                <button id="exitpopUp"> 取消 </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="foot"></div>
+</body>
+</html>
