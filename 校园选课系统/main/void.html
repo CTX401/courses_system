@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>窗口大小自适应滚动条</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+        
+        .control-panel {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #4299e1;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #e53e3e;
+        }
+        
+        .btn-danger:hover {
+            background: #c53030;
+        }
+        
+        .size-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .info-card h3 {
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .info-card .value {
+            color: #2d3748;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+        
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .child-container {
+            min-width: 400px;
+            min-height: 300px;
+            background: linear-gradient(45deg, #fed7d7, #feebc8);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .scroll-status {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #234e52;
+            border: 1px solid #81e6d9;
+        }
+        
+        .scroll-active {
+            background: #fed7d7;
+            color: #742a2a;
+            border-color: #fc8181;
+        }
+        
+        .resize-handle {
+            width: 100%;
+            height: 4px;
+            background: #4299e1;
+            border-radius: 2px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .resize-handle::after {
+            content: '↕ 拖动调整窗口大小';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #4299e1;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>窗口大小自适应滚动条</h1>
+            <p>调整窗口大小，当主窗口小于子窗口时自动显示滚动条</p>
+        </div>
+        
+        <div class="control-panel">
+            <button class="btn" onclick="addContent()">添加内容</button>
+            <button class="btn btn-danger" onclick="clearContent()">清空内容</button>
+            <span style="margin-left: auto; color: #718096;">
+                当前时间: <span id="currentTime"></span>
+            </span>
+        </div>
+        
+        <div class="size-info">
+            <div class="info-card">
+                <h3>主窗口宽度</h3>
+                <div class="value" id="windowWidth">0px</div>
+            </div>
+            <div class="info-card">
+                <h3>主窗口高度</h3>
+                <div class="value" id="windowHeight">0px</div>
+            </div>
+            <div class="info-card">
+                <h3>子窗口宽度</h3>
+                <div class="value" id="childWidth">0px</div>
+            </div>
+            <div class="info-card">
+                <h3>子窗口高度</h3>
+                <div class="value" id="childHeight">0px</div>
+            </div>
+        </div>
+        
+        <div class="resize-handle"></div>
+        
+        <div class="main-content">
+            <div class="content-area">
+                <h2 style="margin-bottom: 15px; color: #2d3748;">子窗口容器</h2>
+                <div id="childWindow" class="child-container">
+                    <p style="color: #718096; margin-bottom: 15px;">这是一个子窗口div容器</p>
+                    <p style="color: #718096;">调整浏览器窗口大小，当主窗口小于此容器时会出现滚动条</p>
+                </div>
+                
+                <div id="scrollStatus" class="scroll-status">
+                    滚动条状态: 未激活
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <h2 style="margin-bottom: 15px; color: #2d3748;">状态监控</h2>
+                <div style="background: #f7fafc; padding: 15px; border-radius: 8px;">
+                    <h3 style="color: #4a5568; margin-bottom: 10px;">功能说明:</h3>
+                    <ul style="color: #718096; padding-left: 20px; line-height: 1.6;">
+                        <li>监听窗口resize事件</li>
+                        <li>动态比较窗口尺寸</li>
+                        <li>自动控制overflow属性</li>
+                        <li>实时显示尺寸信息</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const childWindow = document.getElementById('childWindow');
+        const scrollStatus = document.getElementById('scrollStatus');
+        const windowWidth = document.getElementById('windowWidth');
+        const windowHeight = document.getElementById('windowHeight');
+        const childWidth = document.getElementById('childWidth');
+        const childHeight = document.getElementById('childHeight');
+        const currentTime = document.getElementById('currentTime');
+        
+        // 初始化函数
+        function init() {
+            updateTime();
+            checkScrollNeeded();
+            
+            // 监听窗口大小变化事件
+            window.addEventListener('resize', function() {
+                checkScrollNeeded();
+                updateSizeInfo();
+            });
+            
+            // 初始更新尺寸信息
+            updateSizeInfo();
+        }
+        
+        // 检查是否需要显示滚动条
+        function checkScrollNeeded() {
+            const windowInnerWidth = window.innerWidth;
+            const windowInnerHeight = window.innerHeight;
+            const childRect = childWindow.getBoundingClientRect();
+            
+            // 更新显示信息
+            windowWidth.textContent = windowInnerWidth + 'px';
+            windowHeight.textContent = windowInnerHeight + 'px';
+            childWidth.textContent = Math.round(childRect.width) + 'px';
+            childHeight.textContent = Math.round(childRect.height) + 'px';
+            
+            // 检查是否需要滚动条
+            const needsHorizontalScroll = childRect.width > windowInnerWidth;
+            const needsVerticalScroll = childRect.height > windowInnerHeight;
+            const needsScroll = needsHorizontalScroll || needsVerticalScroll;
+            
+            if (needsScroll) {
+                // 当子窗口大于主窗口时显示滚动条
+                document.body.style.overflow = 'auto';
+                scrollStatus.textContent = '滚动条状态: 已激活';
+                scrollStatus.classList.add('scroll-active');
+            } else {
+                // 当子窗口小于等于主窗口时隐藏滚动条
+                document.body.style.overflow = 'hidden';
+                scrollStatus.textContent = '滚动条状态: 未激活';
+                scrollStatus.classList.remove('scroll-active');
+            }
+        }
+        
+        // 更新尺寸信息显示
+        function updateSizeInfo() {
+            const windowInnerWidth = window.innerWidth;
+            const windowInnerHeight = window.innerHeight;
+            const childRect = childWindow.getBoundingClientRect();
+            
+            windowWidth.textContent = windowInnerWidth + 'px';
+            windowHeight.textContent = windowInnerHeight + 'px';
+            childWidth.textContent = Math.round(childRect.width) + 'px';
+            childHeight.textContent = Math.round(childRect.height) + 'px';
+        }
+        
+        // 添加内容到子窗口
+        function addContent() {
+            const newContent = document.createElement('div');
+            newContent.style.background = 'rgba(255,255,255,0.8)';
+            newContent.style.padding = '15px';
+            newContent.style.borderRadius = '6px';
+            newContent.style.marginBottom = '10px';
+            newContent.style.border = '1px solid #e2e8f0';
+            newContent.innerHTML = `
+                <h4 style="color: #2d3748; margin-bottom: 5px;">新增内容块</h4>
+                <p style="color: #718096; font-size: 0.9rem;">
+                    这是动态添加的内容，用于测试滚动条显示效果。
+                    添加更多内容会使子窗口尺寸增大。
+                </p>
+            `;
+            childWindow.appendChild(newContent);
+            checkScrollNeeded();
+        }
+        
+        // 清空子窗口内容
+        function clearContent() {
+            childWindow.innerHTML = `
+                <p style="color: #718096; margin-bottom: 15px;">这是一个子窗口div容器</p>
+                <p style="color: #718096;">调整浏览器窗口大小，当主窗口小于此容器时会出现滚动条</p>
+            `;
+            checkScrollNeeded();
+        }
+        
+        // 更新时间显示
+        function updateTime() {
+            const now = new Date();
+            currentTime.textContent = now.toLocaleString('zh-CN');
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // 每秒更新时间
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
