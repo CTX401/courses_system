@@ -92,6 +92,8 @@ document.addEventListener("DOMContentLoaded",async ()=>{
     notification.addEventListener("click", ()=>{
         if(notiCont.style.display == "block" && noti_open == false){
             notiCont.style.display = "none";
+            notification.addEventListener("mouseover", notiOver);
+            notification.addEventListener("mouseout", notiOut);         
         }else{
             noti_open = false;
             notiCont.style.display = "block";
@@ -452,3 +454,4 @@ document.addEventListener("DOMContentLoaded",async ()=>{
         }
     });
 });
+
